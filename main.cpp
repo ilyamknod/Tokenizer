@@ -47,7 +47,7 @@ using Token = std::variant<OpeningBracket, ClosingBracket, Number, UnknownToken,
 // 1234
 
 const std::unordered_map<char, Token> kSymbol2Token = {
-    {'+', Plus{}}, {'-', Minus{}}, {'*', Multiply{}}, {'/', Divide{}}, {'%', Modulo{}} };
+    {'+', Plus{}}, {'-', Minus{}}, {'*', Multiply{}}, {'/', Divide{}}, {'%', Modulo{}}, {'(', OpeningBracket{}}, {')', ClosingBracket{}} };
 
 const std::unordered_map<std::string, Token> kName2Token = {
     {"max", MaxToken{}},
@@ -73,7 +73,7 @@ Number ParseNumber(const std::string& input, size_t& pos) {
 
 Token ParseName(const std::string& input, size_t& pos) {
     std::string name;
-    
+
     auto symbol = static_cast<unsigned char>(input[pos]);
 
     while (std::isalpha(symbol)) {
@@ -114,14 +114,6 @@ std::vector<Token> Tokenize(const std::string& input) {
         }
         else if (std::isalpha(symbol)) {
             tokens.emplace_back(ParseName(input, pos));
-        }
-        else if (symbol == '(') {
-            tokens.emplace_back(OpeningBracket{});
-            ++pos;
-        }
-        else if (symbol == ')') {
-            tokens.emplace_back(ClosingBracket{});
-            ++pos;
         }
         else {
             tokens.emplace_back(UnknownToken{ std::string(1, symbol) });
